@@ -1,73 +1,79 @@
-# Welcome to your Lovable project
+# SplitQuick - Frontend
 
-## Project info
+A modern expense-splitting app that makes it easy to share costs with friends and groups. Built with React, TypeScript, and Tailwind CSS.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Features
 
-## How can I edit this code?
+- **Group Management** - Create groups, add/remove members, assign admin roles
+- **Expense Tracking** - Add expenses with flexible split options (equal, percentage, custom amounts)
+- **Smart Settlements** - Simplified settlement suggestions to minimize transactions
+- **Balance Overview** - Per-user breakdowns showing who owes whom
+- **Insights** - Spending by category (pie chart) and expense timeline (area chart)
+- **Multi-Currency** - Supports 20 currencies including USD, EUR, GBP, LKR, INR, AUD, JPY, and more
+- **Admin Controls** - Only admins can delete groups (requires all balances settled first)
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- **React 18** with TypeScript
+- **Vite** - Build tool and dev server
+- **Tailwind CSS** - Utility-first styling
+- **shadcn/ui** - Accessible component library (Radix UI primitives)
+- **React Router** - Client-side routing
+- **TanStack React Query** - Server state management and caching
+- **Recharts** - Data visualization (pie charts, area charts)
+- **Framer Motion** - Animations and transitions
+- **Sonner** - Toast notifications
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js 18+ and npm
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+### Setup
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Install dependencies
+npm install
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Create a .env file (optional - defaults to localhost:3000)
+echo VITE_API_BASE_URL=http://localhost:3000 > .env
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the dev server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The app will be available at `http://localhost:5173`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Scripts
 
-**Use GitHub Codespaces**
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Production build |
+| `npm run build:dev` | Development build |
+| `npm run preview` | Preview production build |
+| `npm run lint` | Run ESLint |
+| `npm run test` | Run tests |
+| `npm run test:watch` | Run tests in watch mode |
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Project Structure
 
-## What technologies are used for this project?
+```
+src/
+  contexts/       # Auth context provider
+  components/ui/  # shadcn/ui components
+  lib/            # API client, utilities
+  pages/          # Route pages (Dashboard, GroupDetail, Login, Register)
+  types/          # TypeScript type definitions
+```
 
-This project is built with:
+## Environment Variables
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `VITE_API_BASE_URL` | `http://localhost:3000` | Backend API base URL |
 
-## How can I deploy this project?
+## Backend
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+This frontend connects to the [SplitQuick Backend API](../expense-app-backend). Make sure the backend is running before starting the frontend.
