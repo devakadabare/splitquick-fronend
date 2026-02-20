@@ -77,6 +77,15 @@ class ApiClient {
     return data;
   }
 
+  async firebaseLogin(firebaseToken: string): Promise<AuthResponse> {
+    const data = await this.request<AuthResponse>('/api/auth/firebase-login', {
+      method: 'POST',
+      body: JSON.stringify({ token: firebaseToken }),
+    });
+    this.setToken(data.token);
+    return data;
+  }
+
   async getMe(): Promise<{ user: User }> {
     return this.request('/api/auth/me');
   }
