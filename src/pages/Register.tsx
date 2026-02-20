@@ -27,6 +27,9 @@ export default function Register() {
       toast.success('Account created successfully!');
       navigate('/dashboard');
     } catch (err: any) {
+      if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+        return;
+      }
       const errorMsg = err.message || 'Google sign-in failed';
       setError(errorMsg);
       toast.error(errorMsg);

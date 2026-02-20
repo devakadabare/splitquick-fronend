@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCmNAU3WumRH9hvjdQpWHN9M54RAZxmyhk",
-  authDomain: "splitquick.online",
+  apiKey: "xxxx",
+  authDomain: "splitquick-a447c.firebaseapp.com",
   projectId: "splitquick-a447c",
   storageBucket: "splitquick-a447c.firebasestorage.app",
-  messagingSenderId: "838703610330",
-  appId: "1:838703610330:web:f2a5c31f5629e0ec0068e3",
-  measurementId: "G-2HRG5ENJG2",
+  messagingSenderId: "xx",
+  appId: "xxx",
+  measurementId: "xx",
 };
 
 const app = initializeApp(firebaseConfig);
