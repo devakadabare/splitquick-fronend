@@ -114,3 +114,33 @@ export interface RecordSettlementRequest {
   amount: number;
   note?: string;
 }
+
+export interface FriendGroupBalance {
+  groupId: string;
+  groupName: string;
+  currency: string;
+  balance: number;
+}
+
+export interface FriendWithBalance {
+  friendId: string;
+  friendName: string;
+  friendEmail: string;
+  netBalance: number;
+  groupBreakdown: FriendGroupBalance[];
+}
+
+export interface FriendSearchResult {
+  friendId: string;
+  friendName: string;
+  friendEmail: string;
+}
+
+export interface FriendSettlementResult {
+  settlements: {
+    groupId: string;
+    groupName: string;
+    settlementId: string;
+    amount: number;
+  }[];
+}

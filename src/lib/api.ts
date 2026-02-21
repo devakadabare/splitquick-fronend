@@ -10,6 +10,9 @@ import type {
   CreateGroupRequest,
   RecordSettlementRequest,
   GroupMember,
+  FriendWithBalance,
+  FriendSearchResult,
+  FriendSettlementResult,
 } from '@/types/api';
 
 // Configure your backend API base URL here
@@ -213,6 +216,22 @@ class ApiClient {
 
   async deleteSettlement(settlementId: string): Promise<{ message: string }> {
     return this.request(`/api/settlements/${settlementId}`, { method: 'DELETE' });
+  }
+
+  // Friends
+  async searchFriends(query: string): Promise<FriendSearchResult[]> {
+    return this.request(`/api/friends/search?q=${encodeURIComponent(query)}`);
+  }
+
+  async getFriendsWithBalances(): Promise<FriendWithBalance[]> {
+    return this.request('/api/friends/balances');
+  }
+
+  async settleFriend(friendId: string, amount: number, note?: string): Promise<FriendSettlementResult> {
+    return this.request(`/api/friends/${friendId}/settle`, {
+      method: 'POST',
+      body: JSON.stringify({ amount, note }),
+    });
   }
 
   logout() {

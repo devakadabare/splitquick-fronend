@@ -985,7 +985,16 @@ function AddExpenseDialog({ groupId, members, sym, open: controlledOpen, onOpenC
 function AddMemberDialog({ groupId }: { groupId: string }) {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const queryClient = useQueryClient();
+
+  const { data: friendSuggestions = [] } = useQuery({
+    queryKey: ['friendSearch', searchQuery],
+    queryFn: () => api.searchFriends(searchQuery),
+    enabled: searchQuery.length >= 1,
+    staleTime: 10_000,
+  });
 
   const mutation = useMutation({
     mutationFn: () => api.addMember(groupId, email),
@@ -993,12 +1002,25 @@ function AddMemberDialog({ groupId }: { groupId: string }) {
       queryClient.invalidateQueries({ queryKey: ['group', groupId] });
       setOpen(false);
       setEmail('');
+      setSearchQuery('');
       toast.success('Member added successfully');
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to add member');
     },
   });
+
+  const handleInputChange = (value: string) => {
+    setEmail(value);
+    setSearchQuery(value);
+    setShowSuggestions(true);
+  };
+
+  const selectFriend = (friendEmail: string) => {
+    setEmail(friendEmail);
+    setSearchQuery('');
+    setShowSuggestions(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -1015,9 +1037,32 @@ function AddMemberDialog({ groupId }: { groupId: string }) {
           onSubmit={(e) => { e.preventDefault(); mutation.mutate(); }}
           className="space-y-4 mt-2"
         >
-          <div className="space-y-2">
+          <div className="space-y-2 relative">
             <Label>Email</Label>
-            <Input type="email" placeholder="friend@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <Input
+              type="email"
+              placeholder="friend@example.com"
+              value={email}
+              onChange={(e) => handleInputChange(e.target.value)}
+              onFocus={() => searchQuery && setShowSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+              required
+            />
+            {showSuggestions && friendSuggestions.length > 0 && (
+              <div className="absolute z-50 w-full mt-1 bg-popover border rounded-md shadow-md max-h-48 overflow-y-auto">
+                {friendSuggestions.map((f) => (
+                  <button
+                    key={f.friendId}
+                    type="button"
+                    className="w-full text-left px-3 py-2 hover:bg-accent text-sm"
+                    onMouseDown={() => selectFriend(f.friendEmail)}
+                  >
+                    <span className="font-medium">{f.friendName}</span>
+                    <span className="text-muted-foreground ml-2">{f.friendEmail}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           <Button type="submit" className="w-full gradient-primary text-primary-foreground" disabled={mutation.isPending}>
             {mutation.isPending ? 'Adding...' : 'Add Member'}

@@ -11,7 +11,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { motion } from 'framer-motion';
-import { Plus, Users, TrendingUp, TrendingDown, LogOut, ArrowRight, Trash2 } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Plus, Users, UserCheck, TrendingUp, TrendingDown, LogOut, ArrowRight, Trash2 } from 'lucide-react';
+import FriendsTab from '@/components/FriendsTab';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
@@ -132,95 +134,112 @@ export default function Dashboard() {
           </motion.div>
         </div>
 
-        {/* Groups section */}
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-display font-bold text-foreground">Your Groups</h2>
-          <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="gradient-primary text-primary-foreground">
-                <Plus className="w-4 h-4 mr-1" /> New Group
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle className="font-display">Create a group</DialogTitle>
-              </DialogHeader>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  createGroup.mutate();
-                }}
-                className="space-y-4 mt-2"
-              >
-                <div className="space-y-2">
-                  <Label>Group Name</Label>
-                  <Input placeholder="Weekend Trip" value={groupName} onChange={(e) => setGroupName(e.target.value)} required />
-                </div>
-                <div className="space-y-2">
-                  <Label>Currency</Label>
-                  <Select value={currency} onValueChange={setCurrency}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="USD">USD ($)</SelectItem>
-                      <SelectItem value="EUR">EUR (€)</SelectItem>
-                      <SelectItem value="GBP">GBP (£)</SelectItem>
-                      <SelectItem value="LKR">LKR (Rs)</SelectItem>
-                      <SelectItem value="INR">INR (₹)</SelectItem>
-                      <SelectItem value="AUD">AUD (A$)</SelectItem>
-                      <SelectItem value="CAD">CAD (C$)</SelectItem>
-                      <SelectItem value="JPY">JPY (¥)</SelectItem>
-                      <SelectItem value="CNY">CNY (¥)</SelectItem>
-                      <SelectItem value="CHF">CHF (Fr)</SelectItem>
-                      <SelectItem value="SGD">SGD (S$)</SelectItem>
-                      <SelectItem value="AED">AED (د.إ)</SelectItem>
-                      <SelectItem value="MYR">MYR (RM)</SelectItem>
-                      <SelectItem value="THB">THB (฿)</SelectItem>
-                      <SelectItem value="KRW">KRW (₩)</SelectItem>
-                      <SelectItem value="BRL">BRL (R$)</SelectItem>
-                      <SelectItem value="ZAR">ZAR (R)</SelectItem>
-                      <SelectItem value="SEK">SEK (kr)</SelectItem>
-                      <SelectItem value="NZD">NZD (NZ$)</SelectItem>
-                      <SelectItem value="PKR">PKR (₨)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button type="submit" className="w-full gradient-primary text-primary-foreground" disabled={createGroup.isPending}>
-                  {createGroup.isPending ? 'Creating...' : 'Create Group'}
-                </Button>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </div>
+        <Tabs defaultValue="groups" className="mt-2">
+          <TabsList className="grid w-full grid-cols-2 max-w-xs">
+            <TabsTrigger value="groups">
+              <Users className="w-4 h-4 mr-1.5" /> Groups
+            </TabsTrigger>
+            <TabsTrigger value="friends">
+              <UserCheck className="w-4 h-4 mr-1.5" /> Friends
+            </TabsTrigger>
+          </TabsList>
 
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[1, 2, 3].map((i) => (
-              <Card key={i} className="border-0 shadow-md animate-pulse">
-                <CardContent className="p-5 h-24" />
+          <TabsContent value="groups">
+            {/* Groups section */}
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-lg font-display font-bold text-foreground">Your Groups</h2>
+              <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+                <DialogTrigger asChild>
+                  <Button size="sm" className="gradient-primary text-primary-foreground">
+                    <Plus className="w-4 h-4 mr-1" /> New Group
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle className="font-display">Create a group</DialogTitle>
+                  </DialogHeader>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      createGroup.mutate();
+                    }}
+                    className="space-y-4 mt-2"
+                  >
+                    <div className="space-y-2">
+                      <Label>Group Name</Label>
+                      <Input placeholder="Weekend Trip" value={groupName} onChange={(e) => setGroupName(e.target.value)} required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Currency</Label>
+                      <Select value={currency} onValueChange={setCurrency}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="USD">USD ($)</SelectItem>
+                          <SelectItem value="EUR">EUR (€)</SelectItem>
+                          <SelectItem value="GBP">GBP (£)</SelectItem>
+                          <SelectItem value="LKR">LKR (Rs)</SelectItem>
+                          <SelectItem value="INR">INR (₹)</SelectItem>
+                          <SelectItem value="AUD">AUD (A$)</SelectItem>
+                          <SelectItem value="CAD">CAD (C$)</SelectItem>
+                          <SelectItem value="JPY">JPY (¥)</SelectItem>
+                          <SelectItem value="CNY">CNY (¥)</SelectItem>
+                          <SelectItem value="CHF">CHF (Fr)</SelectItem>
+                          <SelectItem value="SGD">SGD (S$)</SelectItem>
+                          <SelectItem value="AED">AED (د.إ)</SelectItem>
+                          <SelectItem value="MYR">MYR (RM)</SelectItem>
+                          <SelectItem value="THB">THB (฿)</SelectItem>
+                          <SelectItem value="KRW">KRW (₩)</SelectItem>
+                          <SelectItem value="BRL">BRL (R$)</SelectItem>
+                          <SelectItem value="ZAR">ZAR (R)</SelectItem>
+                          <SelectItem value="SEK">SEK (kr)</SelectItem>
+                          <SelectItem value="NZD">NZD (NZ$)</SelectItem>
+                          <SelectItem value="PKR">PKR (₨)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Button type="submit" className="w-full gradient-primary text-primary-foreground" disabled={createGroup.isPending}>
+                      {createGroup.isPending ? 'Creating...' : 'Create Group'}
+                    </Button>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            {isLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[1, 2, 3].map((i) => (
+                  <Card key={i} className="border-0 shadow-md animate-pulse">
+                    <CardContent className="p-5 h-24" />
+                  </Card>
+                ))}
+              </div>
+            ) : groups.length === 0 ? (
+              <Card className="border-0 shadow-md">
+                <CardContent className="p-10 text-center">
+                  <Users className="w-12 h-12 mx-auto mb-3 text-muted-foreground/40" />
+                  <p className="text-muted-foreground">No groups yet. Create one to start splitting!</p>
+                </CardContent>
               </Card>
-            ))}
-          </div>
-        ) : groups.length === 0 ? (
-          <Card className="border-0 shadow-md">
-            <CardContent className="p-10 text-center">
-              <Users className="w-12 h-12 mx-auto mb-3 text-muted-foreground/40" />
-              <p className="text-muted-foreground">No groups yet. Create one to start splitting!</p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {groups.map((group, i) => (
-              <motion.div
-                key={group.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <GroupCard group={group} userId={user?.id || ''} />
-              </motion.div>
-            ))}
-          </div>
-        )}
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {groups.map((group, i) => (
+                  <motion.div
+                    key={group.id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                  >
+                    <GroupCard group={group} userId={user?.id || ''} />
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="friends">
+            <FriendsTab />
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
