@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { api } from '@/lib/api';
@@ -7,13 +7,14 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Users, UserCheck, TrendingUp, TrendingDown, LogOut, ArrowRight, Trash2 } from 'lucide-react';
 import FriendsTab from '@/components/FriendsTab';
+import { formatCurrency } from '@/lib/currency';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
@@ -41,13 +42,21 @@ export default function Dashboard() {
     enabled: groups.length > 0,
   });
 
-  const totalOwed = allBalances
-    .filter((b) => b.userId === user?.id && b.balance > 0)
-    .reduce((sum, b) => sum + b.balance, 0);
+  const owedByCurrency = useMemo(() => {
+    const map: Record<string, number> = {};
+    allBalances
+      .filter((b) => b.userId === user?.id && b.balance > 0)
+      .forEach((b) => { map[b.currency] = (map[b.currency] || 0) + b.balance; });
+    return Object.entries(map).map(([currency, amount]) => ({ currency, amount }));
+  }, [allBalances, user?.id]);
 
-  const totalOwe = allBalances
-    .filter((b) => b.userId === user?.id && b.balance < 0)
-    .reduce((sum, b) => sum + Math.abs(b.balance), 0);
+  const oweByCurrency = useMemo(() => {
+    const map: Record<string, number> = {};
+    allBalances
+      .filter((b) => b.userId === user?.id && b.balance < 0)
+      .forEach((b) => { map[b.currency] = (map[b.currency] || 0) + Math.abs(b.balance); });
+    return Object.entries(map).map(([currency, amount]) => ({ currency, amount }));
+  }, [allBalances, user?.id]);
 
   const createGroup = useMutation({
     mutationFn: () => api.createGroup({ name: groupName, currency }),
@@ -67,10 +76,10 @@ export default function Dashboard() {
       {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3">
             <img src="/splitquick-logo.png" alt="SplitQuick" className="w-9 h-9 rounded-xl" />
             <h1 className="text-xl font-display font-bold text-foreground">SplitQuick</h1>
-          </div>
+          </Link>
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground hidden sm:block">Hi, {user?.name}</span>
             <Button variant="ghost" size="sm" onClick={logout}>
@@ -107,9 +116,17 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">You're owed</p>
-                    <p className="text-2xl font-display font-bold text-success">
-                      ${totalOwed.toFixed(2)}
-                    </p>
+                    {owedByCurrency.length > 0 ? (
+                      <div className="space-y-0.5">
+                        {owedByCurrency.map(({ currency: c, amount }) => (
+                          <p key={c} className="text-2xl font-display font-bold text-success leading-tight">
+                            {formatCurrency(amount, c)}
+                          </p>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-2xl font-display font-bold text-success">0.00</p>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -124,9 +141,17 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">You owe</p>
-                    <p className="text-2xl font-display font-bold text-destructive">
-                      ${totalOwe.toFixed(2)}
-                    </p>
+                    {oweByCurrency.length > 0 ? (
+                      <div className="space-y-0.5">
+                        {oweByCurrency.map(({ currency: c, amount }) => (
+                          <p key={c} className="text-2xl font-display font-bold text-destructive leading-tight">
+                            {formatCurrency(amount, c)}
+                          </p>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-2xl font-display font-bold text-destructive">0.00</p>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -272,7 +297,7 @@ function GroupCard({ group, userId }: { group: any; userId: string }) {
               {group.name}
             </h3>
             <p className="text-sm text-muted-foreground mt-1">
-              {group.currency} · {group.memberCount ?? '—'} members
+              {group.currency} · {group.members?.length ?? group.memberCount ?? 0} members
             </p>
           </div>
           <ArrowRight className="w-5 h-5 text-muted-foreground group-hover/groupcard:text-primary transition-colors" />

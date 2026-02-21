@@ -1,6 +1,4 @@
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import HeroSection from '@/components/landing/HeroSection';
@@ -8,16 +6,10 @@ import FeaturesSection from '@/components/landing/FeaturesSection';
 import SettlementDemo from '@/components/landing/SettlementDemo';
 import ComparisonSection from '@/components/landing/ComparisonSection';
 import CTASection from '@/components/landing/CTASection';
+import { ArrowRight } from 'lucide-react';
 
 export default function Landing() {
-  const navigate = useNavigate();
   const { isAuthenticated, isLoading } = useAuth();
-
-  useEffect(() => {
-    if (!isLoading && isAuthenticated) {
-      navigate('/dashboard');
-    }
-  }, [isAuthenticated, isLoading, navigate]);
 
   if (isLoading) return null;
 
@@ -32,12 +24,22 @@ export default function Landing() {
               <span className="text-xl font-bold tracking-tight font-display">SplitQuick</span>
             </div>
             <div className="flex items-center gap-3">
-              <Link to="/login">
-                <Button variant="outline" size="sm" className="border-border text-foreground">Sign In</Button>
-              </Link>
-              <Link to="/register">
-                <Button size="sm" className="gradient-primary text-primary-foreground shadow-glow">Sign Up Free</Button>
-              </Link>
+              {isAuthenticated ? (
+                <Link to="/dashboard">
+                  <Button size="sm" className="gradient-primary text-primary-foreground shadow-glow">
+                    Go to Dashboard <ArrowRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  <Link to="/login">
+                    <Button variant="outline" size="sm" className="border-border text-foreground">Sign In</Button>
+                  </Link>
+                  <Link to="/register">
+                    <Button size="sm" className="gradient-primary text-primary-foreground shadow-glow">Sign Up Free</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

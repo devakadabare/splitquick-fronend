@@ -63,8 +63,8 @@ export default function HeroSection() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="text-lg sm:text-xl text-primary-foreground/60 max-w-2xl mx-auto mb-12 leading-relaxed"
         >
-          Track shared expenses, settle debts, and keep friendships money-drama-free.
-          <span className="text-primary-foreground/80 font-medium"> No limits. No paywalls. No BS.</span>
+          Track shared expenses, settle debts with friends, and get spending insights — all in one place.
+          <span className="text-primary-foreground/80 font-medium"> Multi-currency. Analytics. No limits. No paywalls.</span>
         </motion.p>
 
         <motion.div
@@ -96,7 +96,8 @@ export default function HeroSection() {
           {[
             { value: '\u221E', label: 'Expenses' },
             { value: '$0', label: 'Forever' },
-            { value: '10s', label: 'To Add' },
+            { value: '20+', label: 'Currencies' },
+            { value: '4', label: 'Split Ways' },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <div className="text-3xl sm:text-4xl font-extrabold text-primary-foreground font-display">

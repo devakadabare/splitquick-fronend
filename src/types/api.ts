@@ -66,6 +66,7 @@ export interface Balance {
   userId: string;
   userName: string;
   balance: number;
+  currency: string;
 }
 
 export interface SimplifiedSettlement {
@@ -122,11 +123,16 @@ export interface FriendGroupBalance {
   balance: number;
 }
 
+export interface CurrencyBalance {
+  currency: string;
+  amount: number;
+}
+
 export interface FriendWithBalance {
   friendId: string;
   friendName: string;
   friendEmail: string;
-  netBalance: number;
+  currencyBalances: CurrencyBalance[];
   groupBreakdown: FriendGroupBalance[];
 }
 
@@ -143,4 +149,14 @@ export interface FriendSettlementResult {
     settlementId: string;
     amount: number;
   }[];
+}
+
+export interface CreateDirectExpenseRequest {
+  title: string;
+  amount: number;
+  paidBy: 'me' | 'friend';
+  currency: string;
+  category?: string;
+  note?: string;
+  date?: string;
 }

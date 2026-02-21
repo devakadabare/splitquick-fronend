@@ -23,17 +23,11 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
+import { currencySymbol } from '@/lib/currency';
 import { PieChart, Pie, Cell, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import type { CreateExpenseRequest, RecordSettlementRequest } from '@/types/api';
 
 const CATEGORIES = ['Food', 'Transport', 'Accommodation', 'Utilities', 'Entertainment', 'Groceries', 'Other'];
-
-const currencySymbol: Record<string, string> = {
-  USD: '$', EUR: '€', GBP: '£', LKR: 'Rs', INR: '₹',
-  AUD: 'A$', CAD: 'C$', JPY: '¥', CNY: '¥', CHF: 'Fr',
-  SGD: 'S$', AED: 'د.إ', MYR: 'RM', THB: '฿', KRW: '₩',
-  BRL: 'R$', ZAR: 'R', SEK: 'kr', NZD: 'NZ$', PKR: '₨',
-};
 
 const CHART_COLORS = ['#8b5cf6', '#06b6d4', '#f59e0b', '#ef4444', '#10b981', '#ec4899', '#6366f1'];
 

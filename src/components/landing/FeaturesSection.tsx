@@ -1,48 +1,69 @@
 import { motion } from "framer-motion";
-import { Users, Zap, DollarSign, Shield, Globe, Clock } from "lucide-react";
+import { Users, Zap, DollarSign, Shield, Globe, BarChart3, Coins, UserCheck, SlidersHorizontal } from "lucide-react";
 
 const features = [
   {
     icon: DollarSign,
     title: "Truly Free",
-    desc: "Unlimited expenses, forever. No sneaky 4-expense limit. We believe splitting should be free.",
+    desc: "Unlimited expenses, groups, and friends — forever. No sneaky limits, no paywalls, no premium tiers.",
     gradient: "from-green-500/20 to-emerald-500/20",
     iconColor: "text-green-400",
   },
   {
-    icon: Zap,
-    title: "Lightning Fast",
-    desc: "Add an expense in 10 seconds flat. Balance-first dashboard. In and out, no friction.",
+    icon: SlidersHorizontal,
+    title: "Flexible Splitting",
+    desc: "Split equally, by percentage, or custom amounts. Choose who's in — your split, your rules.",
     gradient: "from-yellow-500/20 to-orange-500/20",
     iconColor: "text-yellow-400",
   },
   {
-    icon: Users,
-    title: "Guest Friendly",
-    desc: "Friends don't need accounts. Share a link, they see what they owe. Simple as that.",
+    icon: UserCheck,
+    title: "Friends & Direct Expenses",
+    desc: "Add friends, track balances across groups, and log 1-on-1 expenses without needing a group.",
     gradient: "from-blue-500/20 to-cyan-500/20",
     iconColor: "text-blue-400",
   },
   {
     icon: Shield,
     title: "Smart Settlements",
-    desc: "Our algorithm minimizes transactions. 4 debts? We simplify it to 1 payment.",
+    desc: "Our algorithm minimizes transactions. 4 debts? We simplify it to 1 payment. Settle per friend too.",
     gradient: "from-primary/20 to-purple-500/20",
     iconColor: "text-primary",
+  },
+  {
+    icon: Coins,
+    title: "Multi-Currency",
+    desc: "Support for 20+ currencies — USD, EUR, GBP, INR, LKR, JPY and more. Travel and split globally.",
+    gradient: "from-pink-500/20 to-rose-500/20",
+    iconColor: "text-pink-400",
+  },
+  {
+    icon: BarChart3,
+    title: "Expense Analytics",
+    desc: "Pie charts by category, spending timelines, and group insights — see exactly where the money goes.",
+    gradient: "from-teal-500/20 to-cyan-500/20",
+    iconColor: "text-teal-400",
   },
   {
     icon: Globe,
     title: "Works Everywhere",
     desc: "Responsive web app. Works on your phone, tablet, or desktop. No app download needed.",
-    gradient: "from-pink-500/20 to-rose-500/20",
-    iconColor: "text-pink-400",
+    gradient: "from-violet-500/20 to-indigo-500/20",
+    iconColor: "text-violet-400",
   },
   {
-    icon: Clock,
-    title: "Real-time Sync",
-    desc: 'Everyone sees updates instantly. No more "did you add that expense?" messages.',
-    gradient: "from-teal-500/20 to-cyan-500/20",
-    iconColor: "text-teal-400",
+    icon: Zap,
+    title: "Lightning Fast",
+    desc: "Step-by-step expense wizard, balance-first dashboard, and mobile FAB — add an expense in seconds.",
+    gradient: "from-amber-500/20 to-yellow-500/20",
+    iconColor: "text-amber-400",
+  },
+  {
+    icon: Users,
+    title: "Guest Members",
+    desc: "Friends don't need accounts. Add them as guests to any group and they still show up in splits.",
+    gradient: "from-rose-500/20 to-red-500/20",
+    iconColor: "text-rose-400",
   },
 ];
 
@@ -68,7 +89,7 @@ export default function FeaturesSection() {
           </h2>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((f, i) => (
             <motion.div
               key={f.title}

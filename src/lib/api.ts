@@ -13,6 +13,7 @@ import type {
   FriendWithBalance,
   FriendSearchResult,
   FriendSettlementResult,
+  CreateDirectExpenseRequest,
 } from '@/types/api';
 
 // Configure your backend API base URL here
@@ -177,10 +178,12 @@ class ApiClient {
 
   async getGroupBalances(groupId: string): Promise<Balance[]> {
     const res: any = await this.request(`/api/expenses/group/${groupId}/balances`);
+    const currency = res.currency || 'USD';
     return (res.balances || []).map((b: any) => ({
       userId: b.userId,
       userName: b.name,
       balance: Number(b.balance),
+      currency,
     }));
   }
 
@@ -227,11 +230,44 @@ class ApiClient {
     return this.request('/api/friends/balances');
   }
 
-  async settleFriend(friendId: string, amount: number, note?: string): Promise<FriendSettlementResult> {
+  async settleFriend(friendId: string, amount: number, note?: string, currency?: string): Promise<FriendSettlementResult> {
     return this.request(`/api/friends/${friendId}/settle`, {
       method: 'POST',
-      body: JSON.stringify({ amount, note }),
+      body: JSON.stringify({ amount, note, currency }),
     });
+  }
+
+  async createDirectExpense(friendId: string, data: CreateDirectExpenseRequest): Promise<Expense> {
+    const e: any = await this.request(`/api/friends/${friendId}/expenses`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+    return {
+      ...e,
+      amount: Number(e.amount),
+      paidByName: e.payer?.name || 'Unknown',
+      splits: e.splits?.map((s: any) => ({
+        ...s,
+        amount: Number(s.amount),
+        percentage: s.percentage != null ? Number(s.percentage) : undefined,
+        userName: s.user?.name,
+      })) || [],
+    };
+  }
+
+  async getDirectExpenses(friendId: string): Promise<Expense[]> {
+    const raw: any[] = await this.request(`/api/friends/${friendId}/expenses`);
+    return raw.map((e) => ({
+      ...e,
+      amount: Number(e.amount),
+      paidByName: e.payer?.name || 'Unknown',
+      splits: e.splits?.map((s: any) => ({
+        ...s,
+        amount: Number(s.amount),
+        percentage: s.percentage != null ? Number(s.percentage) : undefined,
+        userName: s.user?.name,
+      })) || [],
+    }));
   }
 
   logout() {

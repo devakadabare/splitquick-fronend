@@ -7,6 +7,10 @@ const rows = [
   { feature: 'Add Expense Speed', sq: '~10 seconds', sw: '60+ seconds', sqWin: true },
   { feature: 'Guest Users', sq: 'Full support', sw: 'Limited', sqWin: true },
   { feature: 'Smart Settlements', sq: true, sw: true, sqWin: false },
+  { feature: 'Multi-Currency', sq: '20+ currencies', sw: 'Limited free', sqWin: true },
+  { feature: 'Expense Analytics', sq: 'Charts & trends', sw: 'Pro only', sqWin: true },
+  { feature: 'Friends System', sq: 'Direct expenses', sw: 'Basic', sqWin: true },
+  { feature: 'Split Methods', sq: '4 flexible ways', sw: 'Equal or exact', sqWin: true },
 ];
 
 export default function ComparisonSection() {

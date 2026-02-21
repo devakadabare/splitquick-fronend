@@ -64,12 +64,14 @@ export default function Login() {
           transition={{ duration: 0.6 }}
           className="max-w-md text-center"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-primary mb-8">
+          <Link to="/" className="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-primary mb-8">
             <Wallet className="w-8 h-8 text-primary-foreground" />
-          </div>
-          <h1 className="text-4xl font-display font-extrabold text-primary-foreground mb-4">
-            SplitQuick
-          </h1>
+          </Link>
+          <Link to="/">
+            <h1 className="text-4xl font-display font-extrabold text-primary-foreground mb-4">
+              SplitQuick
+            </h1>
+          </Link>
           <p className="text-lg text-primary-foreground/70">
             The actually free way to split expenses with friends. No limits, no paywalls.
           </p>
@@ -84,12 +86,12 @@ export default function Login() {
           transition={{ duration: 0.4 }}
           className="w-full max-w-sm"
         >
-          <div className="lg:hidden flex items-center gap-2 mb-8 justify-center">
+          <Link to="/" className="lg:hidden flex items-center gap-2 mb-8 justify-center">
             <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
               <Wallet className="w-5 h-5 text-primary-foreground" />
             </div>
             <span className="text-xl font-display font-bold text-foreground">SplitQuick</span>
-          </div>
+          </Link>
 
           <Card className="border-0 shadow-lg">
             <CardHeader className="space-y-1 pb-4">
