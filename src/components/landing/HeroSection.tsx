@@ -35,7 +35,7 @@ export default function HeroSection() {
           transition={{ duration: 0.5, type: 'spring' }}
         >
           <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold bg-primary/20 text-primary-foreground/90 border border-primary/30 mb-8 backdrop-blur-sm">
-            <Sparkles className="w-4 h-4" />
+            {/* <Sparkles className="w-4 h-4" /> */}
             The ACTUALLY Free Splitwise Alternative
           </span>
         </motion.div>
@@ -63,7 +63,7 @@ export default function HeroSection() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="text-lg sm:text-xl text-primary-foreground/60 max-w-2xl mx-auto mb-12 leading-relaxed"
         >
-          Track shared expenses, settle debts with friends, and get spending insights — all in one place.
+          Track shared expenses, settle debts with friends, and get spending insights, all in one place.
           <span className="text-primary-foreground/80 font-medium"> Multi-currency. Analytics. No limits. No paywalls.</span>
         </motion.p>
 

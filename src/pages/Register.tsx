@@ -26,6 +26,7 @@ export default function Register() {
       await loginWithGoogle();
       toast.success('Account created successfully!');
       navigate('/dashboard');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
         return;
@@ -46,6 +47,7 @@ export default function Register() {
       await register(name, email, password);
       toast.success('Account created successfully!');
       navigate('/dashboard');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const errorMsg = err.message || 'Registration failed';
       setError(errorMsg);
@@ -95,7 +97,7 @@ export default function Register() {
           <Card className="border-0 shadow-lg">
             <CardHeader className="space-y-1 pb-4">
               <CardTitle className="text-2xl font-display">Create account</CardTitle>
-              <CardDescription>Get started — it's free forever</CardDescription>
+              <CardDescription>Get started! It's free forever</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">

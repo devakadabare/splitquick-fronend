@@ -5,14 +5,14 @@ const features = [
   {
     icon: DollarSign,
     title: "Truly Free",
-    desc: "Unlimited expenses, groups, and friends — forever. No sneaky limits, no paywalls, no premium tiers.",
+    desc: "Unlimited expenses, groups, and friends. No sneaky limits, no paywalls, no premium tiers.",
     gradient: "from-green-500/20 to-emerald-500/20",
     iconColor: "text-green-400",
   },
   {
     icon: SlidersHorizontal,
     title: "Flexible Splitting",
-    desc: "Split equally, by percentage, or custom amounts. Choose who's in — your split, your rules.",
+    desc: "Split equally, by percentage, or custom amounts. Choose who's in your split, your rules.",
     gradient: "from-yellow-500/20 to-orange-500/20",
     iconColor: "text-yellow-400",
   },
@@ -40,7 +40,7 @@ const features = [
   {
     icon: BarChart3,
     title: "Expense Analytics",
-    desc: "Pie charts by category, spending timelines, and group insights — see exactly where the money goes.",
+    desc: "Pie charts by category, spending timelines, and group insights ,see exactly where the money goes.",
     gradient: "from-teal-500/20 to-cyan-500/20",
     iconColor: "text-teal-400",
   },
@@ -54,7 +54,7 @@ const features = [
   {
     icon: Zap,
     title: "Lightning Fast",
-    desc: "Step-by-step expense wizard, balance-first dashboard, and mobile FAB — add an expense in seconds.",
+    desc: "Step-by-step expense wizard, balance-first dashboard, and mobile FAB, add an expense in seconds.",
     gradient: "from-amber-500/20 to-yellow-500/20",
     iconColor: "text-amber-400",
   },

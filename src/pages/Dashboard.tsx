@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Users, UserCheck, TrendingUp, TrendingDown, LogOut, ArrowRight, Trash2 } from 'lucide-react';
+import { Plus, Users, UserCheck, TrendingUp, TrendingDown, LogOut, ArrowRight } from 'lucide-react';
 import FriendsTab from '@/components/FriendsTab';
 import { formatCurrency } from '@/lib/currency';
 
@@ -254,7 +254,7 @@ export default function Dashboard() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
                   >
-                    <GroupCard group={group} userId={user?.id || ''} />
+                    <GroupCard group={group} />
                   </motion.div>
                 ))}
               </div>
@@ -270,26 +270,9 @@ export default function Dashboard() {
   );
 }
 
-function GroupCard({ group, userId }: { group: any; userId: string }) {
-  const queryClient = useQueryClient();
-  const [deleteOpen, setDeleteOpen] = useState(false);
-
-  const deleteMutation = useMutation({
-    mutationFn: () => api.deleteGroup(group.id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['groups'] });
-      setDeleteOpen(false);
-      toast.success('Group deleted successfully');
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to delete group');
-    },
-  });
-
-  const isAdmin = group.members?.some((m: any) => m.userId === userId && m.role === 'admin');
-
+function GroupCard({ group }: { group: any }) {
   return (
-    <Card className="border-0 shadow-md hover:shadow-lg hover:shadow-primary/5 transition-all group/groupcard relative">
+    <Card className="border-0 shadow-md hover:shadow-lg hover:shadow-primary/5 transition-all group/groupcard">
       <CardContent className="p-5">
         <Link to={`/groups/${group.id}`} className="flex items-center justify-between">
           <div>
@@ -302,43 +285,6 @@ function GroupCard({ group, userId }: { group: any; userId: string }) {
           </div>
           <ArrowRight className="w-5 h-5 text-muted-foreground group-hover/groupcard:text-primary transition-colors" />
         </Link>
-        {isAdmin && (
-          <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-            <DialogTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute top-2 right-2 h-7 w-7 opacity-0 group-hover/groupcard:opacity-100 transition-opacity"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Trash2 className="w-3.5 h-3.5 text-destructive" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle className="font-display">Delete Group</DialogTitle>
-              </DialogHeader>
-              <p className="text-sm text-muted-foreground">
-                Are you sure you want to delete "{group.name}"? This will permanently remove all expenses and settlements in this group.
-              </p>
-              <div className="flex gap-3 justify-end mt-4">
-                <Button variant="outline" onClick={() => setDeleteOpen(false)}>
-                  Cancel
-                </Button>
-                <Button
-                  variant="destructive"
-                  onClick={() => deleteMutation.mutate()}
-                  disabled={deleteMutation.isPending}
-                >
-                  {deleteMutation.isPending ? 'Deleting...' : 'Delete Group'}
-                </Button>
-              </div>
-              {deleteMutation.isError && (
-                <p className="text-sm text-destructive">{(deleteMutation.error as Error).message}</p>
-              )}
-            </DialogContent>
-          </Dialog>
-        )}
       </CardContent>
     </Card>
   );

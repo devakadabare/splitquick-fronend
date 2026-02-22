@@ -22,7 +22,7 @@ export default function CTASection() {
               <br />expense drama?
             </h2>
             <p className="text-lg text-primary-foreground/60 mb-10 max-w-lg mx-auto">
-              Groups, friends, multi-currency, analytics — everything you need to split expenses. Free forever, no strings attached.
+              Groups, friends, multi-currency, analytics ,everything you need to split expenses. Free forever, no strings attached.
             </p>
             <Link to="/register">
               <Button size="lg" className="gradient-primary text-primary-foreground shadow-glow px-12 h-14 text-lg group">
