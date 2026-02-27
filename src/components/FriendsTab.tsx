@@ -100,33 +100,40 @@ function FriendCard({ friend }: { friend: FriendWithBalance }) {
     <Card className="border-0 shadow-md">
       <CardContent className="p-4">
         <Collapsible>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-accent flex items-center justify-center text-sm font-semibold text-accent-foreground">
-                {friend.friendName.charAt(0).toUpperCase()}
+          <div className="flex items-start gap-2">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-accent flex items-center justify-center text-sm font-semibold text-accent-foreground flex-shrink-0">
+                  {friend.friendName.charAt(0).toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <span className="font-medium text-foreground">{friend.friendName}</span>
+                  <p className={`text-sm font-display font-bold ${balanceColor}`}>
+                    {balanceSummary}
+                  </p>
+                </div>
+                {!hasBalance && (
+                  <Button size="sm" variant="outline" className="flex-shrink-0" onClick={() => setExpenseOpen(true)}>
+                    <Plus className="w-3.5 h-3.5 mr-1" /> Expense
+                  </Button>
+                )}
               </div>
-              <div>
-                <span className="font-medium text-foreground">{friend.friendName}</span>
-                <p className={`text-sm font-display font-bold ${balanceColor}`}>
-                  {balanceSummary}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button size="sm" variant="outline" onClick={() => setExpenseOpen(true)}>
-                <Plus className="w-3.5 h-3.5 mr-1" /> Expense
-              </Button>
               {hasBalance && (
-                <Button size="sm" variant="outline" onClick={() => setSettleOpen(true)}>
-                  <ArrowRightLeft className="w-3.5 h-3.5 mr-1" /> Settle
-                </Button>
+                <div className="flex items-center justify-end gap-1.5 mt-2">
+                  <Button size="sm" variant="outline" onClick={() => setExpenseOpen(true)}>
+                    <Plus className="w-3.5 h-3.5 mr-1" /> Expense
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => setSettleOpen(true)}>
+                    <ArrowRightLeft className="w-3.5 h-3.5 mr-1" /> Settle
+                  </Button>
+                </div>
               )}
-              <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <ChevronDown className="w-4 h-4" />
-                </Button>
-              </CollapsibleTrigger>
             </div>
+            <CollapsibleTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0 mt-1">
+                <ChevronDown className="w-4 h-4" />
+              </Button>
+            </CollapsibleTrigger>
           </div>
 
           <CollapsibleContent>

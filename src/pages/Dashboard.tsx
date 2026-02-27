@@ -162,7 +162,7 @@ export default function Dashboard() {
         </div>
 
         <Tabs defaultValue="groups" className="mt-2">
-          <TabsList className="grid w-full grid-cols-2 max-w-xs">
+          <TabsList className="grid w-full grid-cols-2 sm:max-w-xs">
             <TabsTrigger value="groups">
               <Users className="w-4 h-4 mr-1.5" /> Groups
             </TabsTrigger>
@@ -177,7 +177,7 @@ export default function Dashboard() {
               <h2 className="text-lg font-display font-bold text-foreground">Your Groups</h2>
               <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                 <DialogTrigger asChild>
-                  <Button size="sm" className="gradient-primary text-primary-foreground">
+                  <Button size="sm" className="gradient-primary text-primary-foreground hidden sm:inline-flex">
                     <Plus className="w-4 h-4 mr-1" /> New Group
                   </Button>
                 </DialogTrigger>
@@ -261,6 +261,16 @@ export default function Dashboard() {
                 ))}
               </div>
             )}
+
+            {/* Floating Action Button for mobile */}
+            <button
+              type="button"
+              onClick={() => setCreateOpen(true)}
+              className="sm:hidden fixed bottom-6 right-6 z-50 gradient-primary text-primary-foreground rounded-full shadow-lg hover:shadow-xl active:scale-95 transition-all flex items-center gap-2 px-5 py-3.5"
+            >
+              <Plus className="w-5 h-5" />
+              <span className="font-semibold text-sm">New Group</span>
+            </button>
           </TabsContent>
 
           <TabsContent value="friends">
