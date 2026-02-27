@@ -56,7 +56,11 @@ class ApiClient {
 
     if (!res.ok) {
       const error = await res.json().catch(() => ({ error: 'Request failed' }));
-      throw new Error(error.error || `HTTP ${res.status}`);
+      // For structured errors (e.g. 409 with code), pass the full JSON as the message
+      if (error.code) {
+        throw new Error(JSON.stringify(error));
+      }
+      throw new Error(error.error || error.message || `HTTP ${res.status}`);
     }
 
     return res.json();
@@ -107,8 +111,8 @@ class ApiClient {
     return this.request(`/api/groups/${groupId}`);
   }
 
-  async deleteGroup(groupId: string): Promise<{ message: string }> {
-    return this.request(`/api/groups/${groupId}`, { method: 'DELETE' });
+  async deleteGroup(groupId: string, force = false): Promise<{ message: string }> {
+    return this.request(`/api/groups/${groupId}${force ? '?force=true' : ''}`, { method: 'DELETE' });
   }
 
   async addMember(groupId: string, email: string): Promise<GroupMember> {

@@ -13,6 +13,7 @@ import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/component
 import { motion } from 'framer-motion';
 import { ChevronDown, ArrowRightLeft, UserCheck, Plus, Receipt } from 'lucide-react';
 import { formatCurrency } from '@/lib/currency';
+import { useDefaultCurrency } from '@/hooks/use-default-currency';
 import type { FriendWithBalance, Expense, CurrencyBalance } from '@/types/api';
 
 const CATEGORIES = [
@@ -231,10 +232,11 @@ function AddFriendExpenseDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const defaultCurrency = useDefaultCurrency();
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
   const [paidBy, setPaidBy] = useState<'me' | 'friend'>('me');
-  const [currency, setCurrency] = useState('USD');
+  const [currency, setCurrency] = useState(defaultCurrency);
   const [category, setCategory] = useState('');
   const [note, setNote] = useState('');
   const queryClient = useQueryClient();
@@ -244,11 +246,11 @@ function AddFriendExpenseDialog({
       setTitle('');
       setAmount('');
       setPaidBy('me');
-      setCurrency('USD');
+      setCurrency(defaultCurrency);
       setCategory('');
       setNote('');
     }
-  }, [open]);
+  }, [open, defaultCurrency]);
 
   const mutation = useMutation({
     mutationFn: () =>

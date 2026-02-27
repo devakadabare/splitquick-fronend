@@ -108,14 +108,30 @@ export default function GroupDetail() {
   }, [balances, simplified]);
 
   const [deleteGroupOpen, setDeleteGroupOpen] = useState(false);
+  const [deleteGroupHasBalances, setDeleteGroupHasBalances] = useState(false);
   const deleteGroupMutation = useMutation({
-    mutationFn: () => api.deleteGroup(groupId!),
+    mutationFn: (force = false) => api.deleteGroup(groupId!, force),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['groups'] });
       toast.success('Group deleted successfully');
       navigate('/dashboard');
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
+      // Check if the error is an outstanding balances error (409)
+      try {
+        const parsed = typeof error.message === 'string' ? JSON.parse(error.message) : error.message;
+        if (parsed?.code === 'OUTSTANDING_BALANCES') {
+          setDeleteGroupHasBalances(true);
+          return;
+        }
+      } catch {
+        // Not a structured error
+      }
+      // Check for the raw message from the API
+      if (error.message?.includes('outstanding balances') || error.message?.includes('OUTSTANDING_BALANCES')) {
+        setDeleteGroupHasBalances(true);
+        return;
+      }
       toast.error(error.message || 'Failed to delete group');
     },
   });
@@ -186,28 +202,55 @@ export default function GroupDetail() {
           </div>
 
           {/* Delete Group Confirmation */}
-          <Dialog open={deleteGroupOpen} onOpenChange={setDeleteGroupOpen}>
+          <Dialog open={deleteGroupOpen} onOpenChange={(open) => {
+            setDeleteGroupOpen(open);
+            if (!open) setDeleteGroupHasBalances(false);
+          }}>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle className="font-display">Delete Group</DialogTitle>
               </DialogHeader>
-              <p className="text-sm text-muted-foreground">
-                Are you sure you want to delete <strong>"{group.name}"</strong>? This will remove all expenses, settlements, and member data. This action cannot be undone.
-              </p>
-              <div className="flex gap-3 justify-end mt-4">
-                <Button variant="outline" onClick={() => setDeleteGroupOpen(false)}>
-                  Cancel
-                </Button>
-                <Button
-                  variant="destructive"
-                  onClick={() => deleteGroupMutation.mutate()}
-                  disabled={deleteGroupMutation.isPending}
-                >
-                  {deleteGroupMutation.isPending ? 'Deleting...' : 'Delete Group'}
-                </Button>
-              </div>
-              {deleteGroupMutation.isError && (
-                <p className="text-sm text-destructive">{(deleteGroupMutation.error as Error).message}</p>
+              {!deleteGroupHasBalances ? (
+                <>
+                  <p className="text-sm text-muted-foreground">
+                    Are you sure you want to delete <strong>"{group.name}"</strong>? This will remove all expenses, settlements, and member data. This action cannot be undone.
+                  </p>
+                  <div className="flex gap-3 justify-end mt-4">
+                    <Button variant="outline" onClick={() => setDeleteGroupOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => deleteGroupMutation.mutate(false)}
+                      disabled={deleteGroupMutation.isPending}
+                    >
+                      {deleteGroupMutation.isPending ? 'Deleting...' : 'Delete Group'}
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="space-y-3">
+                    <p className="text-sm text-destructive font-medium">
+                      This group has outstanding balances that haven't been fully settled.
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      This can happen when settlements were over-recorded or duplicated. You can force delete the group, which will clear all expenses and settlement records permanently.
+                    </p>
+                  </div>
+                  <div className="flex gap-3 justify-end mt-4">
+                    <Button variant="outline" onClick={() => setDeleteGroupOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => deleteGroupMutation.mutate(true)}
+                      disabled={deleteGroupMutation.isPending}
+                    >
+                      {deleteGroupMutation.isPending ? 'Deleting...' : 'Force Delete Group'}
+                    </Button>
+                  </div>
+                </>
               )}
             </DialogContent>
           </Dialog>
@@ -571,6 +614,8 @@ function AddExpenseDialog({ groupId, members, sym, open: controlledOpen, onOpenC
   const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
   const setOpen = onOpenChange || setInternalOpen;
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+  const currentUserId = members.find((m) => m.userId === user?.id)?.userId || '';
 
   // Step tracking
   const [step, setStep] = useState(1);
@@ -588,7 +633,7 @@ function AddExpenseDialog({ groupId, members, sym, open: controlledOpen, onOpenC
   const [customSplits, setCustomSplits] = useState<Record<string, string>>({});
 
   // Step 3: Additional Info
-  const [paidBy, setPaidBy] = useState('');
+  const [paidBy, setPaidBy] = useState(currentUserId);
   const [category, setCategory] = useState('');
   const [note, setNote] = useState('');
 
@@ -604,7 +649,7 @@ function AddExpenseDialog({ groupId, members, sym, open: controlledOpen, onOpenC
       setSelectedMembers(new Set());
       setPercentageSplits({});
       setCustomSplits({});
-      setPaidBy('');
+      setPaidBy(currentUserId);
       setCategory('');
       setNote('');
     }
@@ -648,8 +693,7 @@ function AddExpenseDialog({ groupId, members, sym, open: controlledOpen, onOpenC
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     const amt = parseFloat(amount);
     let splits: { userId: string; amount: number; percentage?: number }[] = [];
     let apiSplitMethod: 'equal' | 'percentage' | 'custom';
@@ -745,7 +789,7 @@ function AddExpenseDialog({ groupId, members, sym, open: controlledOpen, onOpenC
           ))}
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(e) => e.preventDefault()}>
           <div className="overflow-hidden min-h-[280px] -mx-1 px-1">
             <AnimatePresence mode="wait" custom={direction}>
               <motion.div
@@ -961,7 +1005,7 @@ function AddExpenseDialog({ groupId, members, sym, open: controlledOpen, onOpenC
                 Next <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             ) : (
-              <Button type="submit" size="sm" className="gradient-primary text-primary-foreground" disabled={mutation.isPending || !paidBy}>
+              <Button type="button" size="sm" className="gradient-primary text-primary-foreground" disabled={mutation.isPending || !paidBy} onClick={handleSubmit}>
                 {mutation.isPending ? 'Adding...' : 'Add Expense'}
               </Button>
             )}

@@ -15,13 +15,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Users, UserCheck, TrendingUp, TrendingDown, LogOut, ArrowRight } from 'lucide-react';
 import FriendsTab from '@/components/FriendsTab';
 import { formatCurrency } from '@/lib/currency';
+import { useDefaultCurrency } from '@/hooks/use-default-currency';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const queryClient = useQueryClient();
+  const defaultCurrency = useDefaultCurrency();
   const [createOpen, setCreateOpen] = useState(false);
   const [groupName, setGroupName] = useState('');
-  const [currency, setCurrency] = useState('USD');
+  const [currency, setCurrency] = useState(defaultCurrency);
 
   const { data: groups = [], isLoading } = useQuery({
     queryKey: ['groups'],
